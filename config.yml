@@ -1,0 +1,9 @@
+appName="BigCalc"
+
+[mysql]
+host=
+name="bigcalc"
+password="chibaohezuqurip"
+port=3306
+user="root"
+
