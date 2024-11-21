@@ -5,12 +5,12 @@ import (
 )
 
 type User struct {
-	UserId          uint           `gorm:"primaryKey;autoIncrement"`// 主键
-	Email           string         `gorm:"uniqueIndex;not null"` 
-	UserName        string         `gorm:"not null"`                        
-	Password        string         `gorm:"not null"`                        
-	ConfirmPassword string         `gorm:"not null"`                      
-	CreatedAt       time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
-	IsLogin         bool            `gorm:"default:false"`
-	AvatarURL   	string    		`gorm:"default:''"`// 头像URL
+	UserId          uint      `gorm:"primaryKey;autoIncrement" json:"user_id"`
+	Email           string    `gorm:"type:varchar(255);uniqueIndex;not null" json:"email"` // 指定 varchar(255)
+	UserName        string    `gorm:"not null" json:"user_name"`
+	Password        string    `gorm:"not null" json:"password"`
+	ConfirmPassword string    `gorm:"not null" json:"confirm_password"`
+	CreatedAt       time.Time `gorm:"type:timestamp;default:CURRENT_TIMESTAMP" json:"created_at"`
+	IsLogin         bool      `gorm:"default:false" json:"is_login"`
+	AvatarURL       string    `gorm:"default:''" json:"avatar_url"`
 }
