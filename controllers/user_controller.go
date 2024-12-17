@@ -35,10 +35,10 @@ func Register(c *gin.Context) {
 
 	//保存用户信息到数据库
 	if err := database.Db.Create(&user).Error; err != nil {
-		fmt.Println("保存成功")
 		c.JSON(500, gin.H{"error": "Failed to create user"})
 		return
 	}
+	fmt.Println("保存成功")
 
 	//注册成功
 	fmt.Println("xixixixixixi")
@@ -88,7 +88,8 @@ func Login(c *gin.Context) {
 	}
 
 	//更新当前用户信息
-	status.CurrentUserId = user.UserId
+	status.CurrentUserId = dbUser.UserId
+	fmt.Println(status.CurrentUserId)
 	fmt.Println("登录成功！")
 	c.JSON(200, gin.H{"message": "User logged in successfully"})
 

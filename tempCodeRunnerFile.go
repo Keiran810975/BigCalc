@@ -1,2 +1,1 @@
-
-	r.POST("/login",controllers.Login)
+database.InitUserDB()

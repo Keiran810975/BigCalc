@@ -11,7 +11,8 @@ import (
 
 func main() {
 	config.InitConfig()
-	database.InitDB()
+	database.InitUserDB()
+	database.InitCanvasDB()
 	// CORS配置
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:3000"}                   // 允许来自前端的请求
@@ -23,6 +24,7 @@ func main() {
 	r.Use(cors.New(corsConfig))
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
+	r.POST("/history", controllers.GetHistory)
 	r.PUT("/changepassword", utils.ChangePassword)
 	r.POST("/logout", utils.Logout)
 	r.Run(":8080")
