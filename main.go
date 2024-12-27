@@ -25,6 +25,7 @@ func main() {
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 	r.POST("/history", controllers.GetHistory)
+	r.GET("/history/last", controllers.GetCanvas)
 	r.PUT("/changepassword", utils.ChangePassword)
 	r.POST("/logout", utils.Logout)
 	r.Run(":8080")

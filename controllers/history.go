@@ -5,6 +5,7 @@ import (
 	"bigcalc/models"
 	"bigcalc/status"
 	"fmt"
+	"bigcalc/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -56,6 +57,7 @@ func GetHistory(c *gin.Context) {
 	}
 
 	newCanvasData.UserID=status.CurrentUserId
+	newCanvasData.CreatedAt=utils.GetCurrentTime()
 
 	tableName:=getCanvasTableName(status.CurrentUserId)
 
@@ -79,4 +81,43 @@ func GetHistory(c *gin.Context) {
 		"message": "Canvas data received successfully",
 	})
 
+}
+
+func GetCanvas(c *gin.Context) {
+	// 检查用户是否已登录
+	if status.CurrentUserId == 0 {
+		c.JSON(401, gin.H{
+			"message": "Unauthorized",
+		})
+		fmt.Println("未登录")
+		return
+	}
+
+	tableName:=getCanvasTableName(status.CurrentUserId)
+
+	if !isTableExist(tableName) {
+		// 如果表不存在，直接返回空数据
+		c.JSON(200, gin.H{
+			"canvasData": nil,
+			"message":    "No canvas data found for the user",
+		})
+		return
+	}
+
+	// 查询最新的画板数据
+	var canvasData models.CanvasData
+	err := database.CanvasDb.Table(tableName).First(&canvasData).Error
+	if err != nil {
+		fmt.Println("获取画板数据失败", err)
+		c.JSON(500, gin.H{
+			"error": "Failed to retrieve canvas data",
+		})
+		return
+	}
+	fmt.Println(canvasData.CanvasData)
+
+	c.JSON(200, gin.H{
+		"canvasData": canvasData.CanvasData,
+		"message":    "Canvas data retrieved successfully",
+	})
 }

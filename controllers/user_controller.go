@@ -90,6 +90,7 @@ func Login(c *gin.Context) {
 	//更新当前用户信息
 	status.CurrentUserId = dbUser.UserId
 	fmt.Println(status.CurrentUserId)
+	fmt.Println(dbUser.UserName)
 	fmt.Println("登录成功！")
 	c.JSON(200, gin.H{"message": "User logged in successfully"})
 
