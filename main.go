@@ -14,10 +14,15 @@ func main() {
 	database.InitUserDB()
 	database.InitCanvasDB()
 	// CORS配置
+	//corsConfig := cors.DefaultConfig()
+	//corsConfig.AllowOrigins = []string{"http://localhost:3000"}                   // 允许来自前端的请求
+	//corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}            // 允许的请求方法
+	//corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"} // 允许的请求头
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:3000"}                   // 允许来自前端的请求
-	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}            // 允许的请求方法
+	corsConfig.AllowOrigins = []string{"http://localhost:3000"}                   // 允许的来源
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"} // 允许的 HTTP 方法，包括 OPTIONS
 	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"} // 允许的请求头
+	corsConfig.AllowCredentials = true                                            // 如果需要处理带凭证的请求，设置为 true
 
 	r := gin.Default()
 
