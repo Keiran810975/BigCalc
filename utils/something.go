@@ -54,8 +54,5 @@ func UploadAvatar(c *gin.Context){
 		c.JSON(404, gin.H{"error": "User not found",})
 		return
 	}
-
-	//未完成
-
-
+	return
 }

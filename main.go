@@ -30,8 +30,9 @@ func main() {
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 	r.POST("/history", controllers.GetHistory)
-	r.GET("/history/last", controllers.GetCanvas)
+	r.GET("/history/last/:id", controllers.GetCanvas)
 	r.PUT("/changepassword", utils.ChangePassword)
+	r.GET("/history/list", controllers.GetHistoryList)
 	r.POST("/logout", utils.Logout)
 	r.Run(":8080")
 }

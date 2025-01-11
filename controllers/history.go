@@ -84,6 +84,56 @@ func GetHistory(c *gin.Context) {
 }
 
 func GetCanvas(c *gin.Context) {
+	fmt.Println("GetCanvas")
+	// 检查用户是否已登录
+	if status.CurrentUserId == 0 {
+		c.JSON(401, gin.H{
+			"message": "Unauthorized",
+		})
+		fmt.Println("未登录")
+		return
+	}
+
+	// 获取 URL 路径中的 id 参数
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(400, gin.H{
+			"message": "Missing ID parameter",
+		})
+		return
+	}
+
+	tableName:=getCanvasTableName(status.CurrentUserId)
+
+	if !isTableExist(tableName) {
+		// 如果表不存在，直接返回空数据
+		c.JSON(200, gin.H{
+			"canvasData": nil,
+			"message":    "No canvas data found for the user",
+		})
+		return
+	}
+
+	// 查询最新的画板数据
+	var canvasData models.CanvasData
+	// err := database.CanvasDb.Table(tableName).First(&canvasData).Error
+	err := database.CanvasDb.Table(tableName).Where("id = ?", id).First(&canvasData).Error
+	if err != nil {
+		fmt.Println("获取画板数据失败", err)
+		c.JSON(500, gin.H{
+			"error": "Failed to retrieve canvas data",
+		})
+		return
+	}
+	fmt.Println(canvasData.CanvasData)
+
+	c.JSON(200, gin.H{
+		"canvasData": canvasData.CanvasData,
+		"message":    "Canvas data retrieved successfully",
+	})
+}
+
+func GetHistoryList(c *gin.Context){
 	// 检查用户是否已登录
 	if status.CurrentUserId == 0 {
 		c.JSON(401, gin.H{
@@ -104,20 +154,33 @@ func GetCanvas(c *gin.Context) {
 		return
 	}
 
-	// 查询最新的画板数据
-	var canvasData models.CanvasData
-	err := database.CanvasDb.Table(tableName).First(&canvasData).Error
+	// 定义一个结构体来映射表中的数据项
+	var historyItems []struct {
+		ID int `json:"id"`
+	}
+
+	// 查询指定表的所有数据项，只获取 id 字段
+	err := database.CanvasDb.Table(tableName).Select("id").Find(&historyItems).Error
 	if err != nil {
-		fmt.Println("获取画板数据失败", err)
+		// 如果查询出错，返回错误信息
 		c.JSON(500, gin.H{
-			"error": "Failed to retrieve canvas data",
+			"message": "Failed to retrieve history data",
+			"error":   err.Error(),
 		})
 		return
 	}
-	fmt.Println(canvasData.CanvasData)
 
+	// 提取所有的 id 到一个数组
+	var ids []int
+	for _, item := range historyItems {
+		ids = append(ids, item.ID)
+	}
+
+	// 返回 id 数组
 	c.JSON(200, gin.H{
-		"canvasData": canvasData.CanvasData,
-		"message":    "Canvas data retrieved successfully",
+		"canvasData": ids,
+		"message":    "Successfully retrieved history data",
 	})
+
+	//
 }

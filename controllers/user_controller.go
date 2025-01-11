@@ -6,6 +6,7 @@ import (
 	"bigcalc/status"
 	"bigcalc/utils"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -80,6 +81,7 @@ func Login(c *gin.Context) {
 	//登录成功
 	dbUser.IsLogin = true
 
+
 	//更新登录状态
 	if err := database.Db.Save(&dbUser).Error; err != nil {
 		fmt.Println("保存用户失败")
@@ -92,6 +94,8 @@ func Login(c *gin.Context) {
 	fmt.Println(status.CurrentUserId)
 	fmt.Println(dbUser.UserName)
 	fmt.Println("登录成功！")
-	c.JSON(200, gin.H{"message": "User logged in successfully"})
+	c.JSON(200, gin.H{"message": "User logged in successfully","username": dbUser.UserName,})
+	fmt.Println(status.CurrentUserId)
 
 }
+
